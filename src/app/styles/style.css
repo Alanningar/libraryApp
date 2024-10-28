@@ -1,0 +1,17 @@
+.Books {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 200px;
+}
+
+.Book {
+    border-radius: 15px;
+    border: 2px solid black;
+    margin: 2vw;
+    height: 200px;
+}
+
+.BookInfo {
+    align-self: flex-end;
+}
