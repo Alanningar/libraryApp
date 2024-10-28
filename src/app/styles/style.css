@@ -1,17 +1,40 @@
+body {
+    background-color: #f0f0f0;
+}
+
 .Books {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 200px;
+    user-select: none;
 }
 
 .Book {
     border-radius: 15px;
-    border: 2px solid black;
-    margin: 2vw;
     height: 200px;
+}
+
+.Book > img {
+    width: 80%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1vh;
+}
+
+.Book > img:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .BookInfo {
     align-self: flex-end;
+}
+
+.BookInfo > h1 {
+    font-weight: bold;
+    font-size: medium;
+}
+
+.BookInfo > h2 {
+    font-weight: lighter;
+    font-size: small;
 }
