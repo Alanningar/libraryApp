@@ -1,4 +1,4 @@
-const login = [
+const loginInfo = [
     {
         name: 'Felix',
         password: 'Felix'
@@ -14,7 +14,14 @@ const login = [
     {
         name: 'Inte Simon',
         password: 'Inte Simon'
+    },
+    {
+        name: '123',
+        password: '123'
     }
   ];
 
+  export default loginInfo;
+
 //a very gpt commmnt with very gpt
+//this comment is also very gpt generated
