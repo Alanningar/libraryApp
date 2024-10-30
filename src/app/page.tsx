@@ -1,4 +1,4 @@
-import Books from "../comps/BookView.js";
+import Books from "../comps/BookView.jsx";
 
 
 export default function Home() {

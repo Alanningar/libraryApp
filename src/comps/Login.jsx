@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import loginInfo from "../comps/logininfo";
+import loginInfo from "./logininfo";
 import { useRouter } from 'next/navigation';
 
 function Login() {
