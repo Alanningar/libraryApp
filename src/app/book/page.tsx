@@ -3,22 +3,23 @@ import Books from "@/comps/BookView";
 const books = [
   {
       image: "/images/book1.jpg",
-      title: "Book One",
-      author: "Author One",
+      title: "The Fractalist",
+      author: "Benoit Mandelbrot",
       releaseInfo: "2021"
   },
   {
       image: "/images/book2.jpg",
-      title: "Book Two",
-      author: "Author Two",
+      title: "Who Will Run The Frog Hospital?",
+      author: "Lorrie Moore",
       releaseInfo: "2020"
   },
   {
       image: "/images/book3.jpg",
-      title: "Book Three",
-      author: "Author Three",
+      title: "Winchell",
+      author: "Neal Gabler",
       releaseInfo: "2019"
-  }
+  },
+  
 ];
 
 export default function Home() {
