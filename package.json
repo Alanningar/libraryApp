@@ -8,10 +8,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest",
+    "add-account": "node prisma/addAccount.js"
   },
   "dependencies": {
+    "@prisma/client": "^5.21.1",
     "next": "14.2.15",
+    "prisma": "^5.21.1",
     "react": "^18",
     "react-dom": "^18"
   },
