@@ -1,4 +1,4 @@
-import Books from "@/comps/BookView";
+import BookView from "@/comps/BookView";
 
 const books = [
   {
@@ -24,6 +24,6 @@ const books = [
 
 export default function Home() {
   return (
-   <Books books={books}/>
+   <BookView />
   );
 }

@@ -3,11 +3,11 @@ body {
 }
 
 .Books {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 200px;
-    user-select: none;
+    display: grid;             
+    grid-template-columns: repeat(4, 0.8fr);
+    padding: 10vh; 
+    justify-items: center;
+    gap: 20px;
 }
 
 .Book {
@@ -16,13 +16,18 @@ body {
 }
 
 .Book > img {
-    width: 80%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 1vh;
 }
 
 .Book > img:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.BookCover {
+    width: 18.75em;  
+    height: 28.125em;       
+    object-fit: cover;
 }
 
 .BookInfo {
@@ -35,6 +40,11 @@ body {
 }
 
 .BookInfo > h2 {
-    font-weight: lighter;
+    font-weight: normal;
     font-size: small;
+}
+
+.BookInfo > h3 {
+    font-weight: lighter;
+    font-size: x-small;
 }

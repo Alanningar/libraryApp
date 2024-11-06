@@ -11,8 +11,11 @@ model Book {
   id       String   @id @default(auto()) @map("_id") @db.ObjectId
   title    String
   author   String
-  image    String
   summary  String
+  released Int
+  genre    String
+  cover    String
+  stock    Int
   loans    Loan[]   
 }
 
