@@ -1,74 +1,62 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+// Login.test.jsx
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Login from '../Login'
-import { useRouter } from 'next/navigation';
-import loginInfo from '../logininfo';
+import { vi } from 'vitest';
+
+const mockPush = vi.fn();
 
 vi.mock('next/navigation', () => ({
-  useRouter: vi.fn(),
+  useRouter: () => ({
+    push: mockPush,
+  }),
 }));
 
 describe('Login Component', () => {
-  const mockRouterPush = vi.fn();
-
   beforeEach(() => {
-    useRouter.mockReturnValue({
-      push: mockRouterPush,
-    });
+    global.fetch = vi.fn();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
   });
 
-  it('renders login form with email and password fields', () => {
-    render(<Login />);
-    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Login/i })).toBeInTheDocument();
-  });
-
-  it('displays error message if login fails', () => {
+  test('renders the login form correctly', () => {
     render(<Login />);
     
-    //mocking a wrong login
-    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'wronguser' } });
-    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: 'wrongpassword' } });
-    fireEvent.click(screen.getByRole('button', { name: /Login/i }));
-
-    //see if it gets the error msg
-    expect(screen.getByText('höhö try again')).toBeInTheDocument();
-    expect(mockRouterPush).not.toHaveBeenCalled();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 
-  it('navigates to /book on correct login', () => {
-    const validUser = { name: '123', password: '123' };
-    loginInfo.push(validUser);
+  test('submits the form with correct credentials and redirects to /book', async () => {
+    fetch.mockResolvedValueOnce({
+      json: () => Promise.resolve({ success: true }),
+    });
 
     render(<Login />);
 
-    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: validUser.name } });
-    fireEvent.change(screen.getByLabelText(/Password/i), { target: { value: validUser.password } });
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /Login/i }));
-
-    expect(mockRouterPush).toHaveBeenCalledWith('/book');
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith('/book');
+    });
   });
 
-  it('updates email and password states on input change', () => {
+  test('displays error message when login fails', async () => {
+    fetch.mockResolvedValueOnce({
+      json: () => Promise.resolve({ success: false, message: 'Invalid credentials' }),
+    });
+
     render(<Login />);
 
-    const emailInput = screen.getByLabelText(/Email/i);
-    const passwordInput = screen.getByLabelText(/Password/i);
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'wrong@arcada.fi' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'wrongpassword' } });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    //checks that init valus are empty
-    expect(emailInput.value).toBe('');
-    expect(passwordInput.value).toBe('');
-
-    fireEvent.change(emailInput, { target: { value: 'testuser' } });
-    fireEvent.change(passwordInput, { target: { value: 'testpassword' } });
-
-    expect(emailInput.value).toBe('testuser');
-    expect(passwordInput.value).toBe('testpassword');
+    await waitFor(() => {
+      expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
+    });
   });
 });
