@@ -2,12 +2,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  const title = "The Song Of Achilles";
-  const author = "Madeline Miller";
-  const summary = `This is the story of the seige of Troy from the perspective of Achilles best-friend Patroclus. Although Patroclus is outcast from his home for disappointing his father he manages to be the only mortal who can keep up with the half-God Archilles. Even though many will know the facts behind the story the telling is fresh and engaging.`;
-  const genre = "Fiction, History, Greeks";
-  const released = 2011;
-  const cover = "https://ia600505.us.archive.org/view_archive.php?archive=/19/items/covers_0012/covers_0012_77.zip&file=0012771612.jpg";
+  const title = "Fahrenheit 451";
+  const author = "Ray Bradbury";
+  const summary = `Fahrenheit 451 is a fascinating novel of a strange and weird future. It is different. it is highly imaginative —but never ridiculous.`;
+  const genre = "Science Fiction";
+  const subgenre = "Science Fiction, Dystopian Fiction, Political Fiction";
+  const released = 1953;
+  const cover = "https://ia800100.us.archive.org/view_archive.php?archive=/5/items/l_covers_0012/l_covers_0012_99.zip&file=0012993656-L.jpg";
   const stock = Math.floor(Math.random() * 10) + 1;
 
   const newBook = await prisma.book.create({
@@ -16,6 +17,7 @@ async function main() {
       author,
       summary,
       genre,
+      subgenre,
       released,
       cover,
       stock,

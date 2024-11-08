@@ -5,9 +5,12 @@ body {
 .Books {
     display: grid;             
     grid-template-columns: repeat(4, 0.8fr);
-    padding: 10vh; 
+    padding: 15vh; 
     justify-items: center;
     gap: 20px;
+    row-gap: 350px;
+    margin-top: -7vh;
+    padding-bottom: 5vh;
 }
 
 .Book {
@@ -47,4 +50,41 @@ body {
 .BookInfo > h3 {
     font-weight: lighter;
     font-size: x-small;
+}
+
+.SelectorDiv {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+} 
+
+.Selector {
+    border-radius: 5px;
+    background-color: white;
+    font-size: large;
+    border:rgba(0, 0, 0, 0.2);
+    padding: 3px;
+    margin-bottom: 1vh;
+}
+.Selector:focus {
+    outline: none;
+}
+.Selector option::selection {
+    color: grey;
+}
+
+.StockFilterDiv {
+    position: absolute;
+    left: 170px;
+    top: 5px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 0px 7px;
+    margin-bottom: 1vh;
+}
+
+.StockFilter {
+    font-weight: normal;
+    font-size: large;
+    user-select: none;
 }
