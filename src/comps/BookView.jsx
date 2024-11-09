@@ -1,23 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import BookModal from './BookModal';
 
-function BookView({ selectedGenre, inStockOnly }) {
+function BookView({ selectedGenre, inStockOnly, userId }) {
     const [books, setBooks] = useState([]);
     const [selectedBookId, setSelectedBookId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const genre = selectedGenre === 'none' ? '' : selectedGenre.charAt(0).toUpperCase() + selectedGenre.slice(1);
-        console.log('Fetching books for genre:', genre);
         const query = `/api/book?genre=${genre}&inStockOnly=${inStockOnly}`;
         fetch(query)
             .then(response => response.json())
-            .then(data => {
-                console.log('Fetched books:', data);
-                setBooks(data);
-            })
+            .then(data => setBooks(data))
             .catch(error => console.error('Error fetching books:', error));
-    }, [selectedGenre, inStockOnly]);
+    }, [selectedGenre, inStockOnly, userId]);
 
     const handleBookClick = (id) => {
         setSelectedBookId(id);
@@ -36,12 +32,12 @@ function BookView({ selectedGenre, inStockOnly }) {
                     <img className="BookCover" src={cover} alt="bookCover" />
                     <div className="BookInfo">
                         <h1>{title}</h1>
-                        <h2>{author} | {released} </h2>
+                        <h2>{author} | {released}</h2>
                         <h3>{subgenre}</h3>
                     </div>
                 </div>
             ))}
-            {isModalOpen && <BookModal BookId={selectedBookId} closeModal={closeModal} />}
+            {isModalOpen && <BookModal BookId={selectedBookId} closeModal={closeModal}/>}
         </div>
     );
 }
