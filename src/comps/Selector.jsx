@@ -8,8 +8,8 @@ function GenreSelector({ selectedGenre, setSelectedGenre }) {
     };
 
     return (
-        <div class="SelectorDiv">
-            <select class="Selector" value={selectedGenre} onChange={handleChange}>
+        <div className="SelectorDiv">
+            <select className="Selector" value={selectedGenre} onChange={handleChange}>
                 <option value="none">Select a genre</option>
                 <option value="fiction">Fiction</option>
                 <option value="mystery">Mystery</option>
@@ -33,9 +33,9 @@ function StockFilter({ inStockOnly, setInStockOnly }) {
     };
 
     return (
-        <div class="StockFilterDiv">
-            <label class="StockFilter">
-                <input class="StockFilterCheckbox" 
+        <div className="StockFilterDiv">
+            <label className="StockFilter">
+                <input className="StockFilterCheckbox" 
                     type="checkbox"
                     checked={inStockOnly}
                     onChange={handleToggle}
