@@ -17,14 +17,14 @@ function MyLoans() {
 
         async function fetchLoanedBooks() {
             try {
-                const booksResponse = await fetch('/api/book');
+                const booksResponse = await fetch('${window.location.origin}/api/book');
                 if (!booksResponse.ok) {
                     throw new Error('Failed to fetch books.');
                 }
                 const books = await booksResponse.json();
 
                 const loanedBooksPromises = books.map(async (book) => {
-                    const loanResponse = await fetch(`/api/loan?bookId=${book.id}`);
+                    const loanResponse = await fetch(`${window.location.origin}/api/loan?bookId=${book.id}`);
                     if (!loanResponse.ok) {
                         throw new Error(`Failed to fetch loan status for book ID: ${book.id}`);
                     }
