@@ -13,6 +13,7 @@
     "add-book": "node prisma/addBook.js"
   },
   "dependencies": {
+    "@netlify/plugin-nextjs": "^5.8.1",
     "@prisma/client": "^5.21.1",
     "mongodb": "^6.10.0",
     "next": "14.2.15",
