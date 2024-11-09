@@ -20,6 +20,7 @@ export default function Login() {
   
     const data = await res.json();
     if (data.success) {
+      localStorage.setItem('userId', data.userId);
       router.push('/book');
     } else {
       setMessage(data.message || 'Login failed');

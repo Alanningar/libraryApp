@@ -17,7 +17,7 @@ export async function POST(req) {
   });
 
   if (user && user.password === password) {
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ success: true, userId: user.id }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
