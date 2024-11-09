@@ -22,13 +22,14 @@ function BookModal({ BookId, closeModal, currentUserId }) {
         }
 
         async function fetchLoanStatus() {
+            const userId = localStorage.getItem('userId'); 
             try {
-                const response = await fetch(`/api/loan?bookId=${BookId}`);
+                const response = await fetch(`/api/loan?bookId=${BookId}&userId=${userId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch loan status');
                 }
                 const data = await response.json();
-                setLoanedToUser(data.loans.length > 0);
+                setLoanedToUser(data.loanedToUser); 
                 setStock(data.stock);
             } catch (error) {
                 setError(error.message);

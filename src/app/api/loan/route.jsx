@@ -5,15 +5,21 @@ const prisma = new PrismaClient();
 export async function GET(req) {
   const url = new URL(req.url);
   const bookId = url.searchParams.get('bookId');
+  const userId = url.searchParams.get('userId'); 
 
-  if (!bookId) {
-    return new Response(JSON.stringify({ success: false, message: 'Book ID is required.' }), {
+  if (!bookId || !userId) {
+    return new Response(JSON.stringify({ success: false, message: 'Book ID and User ID are required.' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
   try {
+    const userLoan = await prisma.loan.findFirst({
+      where: { bookId, userId },
+      select: { userId: true },
+    });
+
     const loans = await prisma.loan.findMany({
       where: { bookId },
       select: { userId: true, return: true },
@@ -21,10 +27,10 @@ export async function GET(req) {
 
     const book = await prisma.book.findUnique({
       where: { id: bookId },
-      select: { stock: true }
+      select: { stock: true },
     });
 
-    return new Response(JSON.stringify({ loans, stock: book.stock }), {
+    return new Response(JSON.stringify({ loans, stock: book.stock, loanedToUser: Boolean(userLoan) }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -36,6 +42,7 @@ export async function GET(req) {
     });
   }
 }
+
 
 export async function POST(req) {
   const { userId, bookId } = await req.json();
