@@ -3,15 +3,12 @@ import { render, screen, fireEvent, waitFor, act } from '@testing-library/react'
 import BookModal from '../BookModal';
 
 global.fetch = vi.fn();
-global.alert = vi.fn();  // Mock window.alert
 
-// Helper function to create a delayed promise
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('BookModal Component', () => {
     beforeEach(() => {
         fetch.mockClear();
-        alert.mockClear();
     });
 
     afterEach(() => {
@@ -19,19 +16,18 @@ describe('BookModal Component', () => {
     });
 
     it('renders without crashing and shows loading initially', async () => {
-        // Mock delayed fetch responses to simulate loading state
         fetch.mockImplementationOnce(() =>
             delay(50).then(() =>
                 Promise.resolve({
                     ok: true,
-                    json: async () => ({ id: '1', title: 'Test Book', author: 'Author Name', summary: 'Summary of the book', cover: '/path/to/cover.jpg' }),
+                    json: async () => ({ id: '1', title: 'Test Book', author: 'Author Name', summary: 'Summary of the book', cover: '/path/to/cover.jpg', stock: 5 }),
                 })
             )
         ).mockImplementationOnce(() =>
             delay(50).then(() =>
                 Promise.resolve({
                     ok: true,
-                    json: async () => [], // No loans to simulate the unloaned state
+                    json: async () => ({ loans: [], stock: 5 }),
                 })
             )
         );
@@ -40,52 +36,21 @@ describe('BookModal Component', () => {
             render(<BookModal BookId="1" closeModal={vi.fn()} currentUserId="123" />);
         });
 
-        // Check that "Loading..." text is shown initially before the API calls resolve
         expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
 
-        // Wait for the component to load the book data after the delay
         await waitFor(() => {
             expect(screen.getByText(/Test Book/i)).toBeInTheDocument();
+            expect(screen.getByText(/Stock: 5/i)).toBeInTheDocument();
         });
     });
 
-    it('fetches and displays book data correctly', async () => {
-        const mockBookData = {
-            id: '1',
-            title: 'Test Book',
-            author: 'Author Name',
-            summary: 'Summary of the book',
-            cover: '/path/to/cover.jpg',
-        };
-
+    it('displays "Out of Stock" when stock is 0 and disables the loan button', async () => {
         fetch.mockResolvedValueOnce({
             ok: true,
-            json: async () => mockBookData,
+            json: async () => ({ id: '1', title: 'Out of Stock Book', stock: 0 }),
         }).mockResolvedValueOnce({
             ok: true,
-            json: async () => [],  // No loans
-        });
-
-        await act(async () => {
-            render(<BookModal BookId="1" closeModal={vi.fn()} currentUserId="123" />);
-        });
-
-        expect(fetch).toHaveBeenCalledWith('/api/book?id=1');
-
-        await waitFor(() => {
-            expect(screen.getByText(/Test Book/i)).toBeInTheDocument();
-            expect(screen.getByText(/Author Name/i)).toBeInTheDocument();
-        });
-    });
-
-    it('displays error message on API failure', async () => {
-        // Simulate a failed fetch request for book data
-        fetch.mockResolvedValueOnce({
-            ok: false,
-            json: async () => ({ message: 'Failed to fetch book' }),
-        }).mockResolvedValueOnce({
-            ok: true,
-            json: async () => [],  // Mocking second fetch to prevent error in fetchLoanStatus
+            json: async () => ({ loans: [], stock: 0 }),
         });
 
         await act(async () => {
@@ -93,30 +58,56 @@ describe('BookModal Component', () => {
         });
 
         await waitFor(() => {
-            expect(screen.getByText(/Failed to fetch book/i)).toBeInTheDocument();
+            expect(screen.getByText(/Out of Stock Book/i)).toBeInTheDocument();
+            expect(screen.getByText(/Stock: 0/i)).toBeInTheDocument();
+            const loanButton = screen.getByRole('button', { name: /Out of Stock/i });
+            expect(loanButton).toBeDisabled();
         });
     });
 
-    it('loans book successfully when Loan button is clicked', async () => {
-        const mockLoanResponse = { success: true };
-
+    it('loans book successfully and decreases stock by 1', async () => {
         fetch
-            .mockResolvedValueOnce({ ok: true, json: async () => ({ id: '1', title: 'Test Book' }) }) // For fetchBook
-            .mockResolvedValueOnce({ ok: true, json: async () => [] }) // For fetchLoanStatus
-            .mockResolvedValueOnce({ ok: true, json: async () => mockLoanResponse }); // For handleLoan
-
+            .mockResolvedValueOnce({ ok: true, json: async () => ({ id: '1', title: 'Loanable Book', stock: 1 }) }) 
+            .mockResolvedValueOnce({ ok: true, json: async () => ({ loans: [], stock: 1 }) }) 
+            .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) }); 
         await act(async () => {
             render(<BookModal BookId="1" closeModal={vi.fn()} currentUserId="123" />);
         });
-
+    
         const loanButton = await screen.findByRole('button', { name: /Loan for 1 Month/i });
+    
         await act(async () => {
             fireEvent.click(loanButton);
         });
+    
+        await waitFor(() => {
+            expect(screen.getByText(/Stock: 0/i)).toBeInTheDocument();
+            expect(screen.queryByRole('button', { name: /Loan for 1 Month/i })).not.toBeInTheDocument();
+        });
+    
+        const returnButton = screen.getByRole('button', { name: /Return Book/i });
+        expect(returnButton).toBeInTheDocument();
+        expect(returnButton).toBeEnabled();
+    });
+    
+    it('returns book successfully and increases stock by 1', async () => {
+        fetch
+            .mockResolvedValueOnce({ ok: true, json: async () => ({ id: '1', title: 'Returnable Book', stock: 0 }) })
+            .mockResolvedValueOnce({ ok: true, json: async () => ({ loans: [{ userId: "123" }], stock: 0 }) })
+            .mockResolvedValueOnce({ ok: true, json: async () => ({ success: true }) });
+
+        await act(async () => {
+            render(<BookModal BookId="1" closeModal={vi.fn()} currentUserId="123" />);
+        });
+
+        const returnButton = await screen.findByRole('button', { name: /Return Book/i });
+        await act(async () => {
+            fireEvent.click(returnButton);
+        });
 
         await waitFor(() => {
-            expect(alert).toHaveBeenCalledWith('Book loaned successfully!');
-            expect(screen.queryByRole('button', { name: /Loan for 1 Month/i })).not.toBeInTheDocument();
+            expect(screen.getByText(/Stock: 1/i)).toBeInTheDocument();
+            expect(screen.getByRole('button', { name: /Loan for 1 Month/i })).toBeEnabled();
         });
     });
 

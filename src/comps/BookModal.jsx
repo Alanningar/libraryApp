@@ -4,18 +4,18 @@ function BookModal({ BookId, closeModal, currentUserId }) {
     const [book, setBook] = useState(null);
     const [error, setError] = useState(null);
     const [loanedToUser, setLoanedToUser] = useState(false); 
+    const [stock, setStock] = useState(0);
 
     useEffect(() => {
         async function fetchBook() {
             try {
-                console.log('Fetching book with ID:', BookId);
                 const response = await fetch(`/api/book?id=${BookId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch book');
                 }
                 const data = await response.json();
                 setBook(data);
-                console.log('Fetched book:', data); 
+                setStock(data.stock);
             } catch (error) {
                 setError(error.message);
             }
@@ -27,10 +27,9 @@ function BookModal({ BookId, closeModal, currentUserId }) {
                 if (!response.ok) {
                     throw new Error('Failed to fetch loan status');
                 }
-                const loans = await response.json();
-                console.log(loans);
-
-                setLoanedToUser(loans.length > 0);
+                const data = await response.json();
+                setLoanedToUser(data.loans.length > 0);
+                setStock(data.stock);
             } catch (error) {
                 setError(error.message);
             }
@@ -52,16 +51,22 @@ function BookModal({ BookId, closeModal, currentUserId }) {
             const data = await response.json();
             if (data.success) {
                 setLoanedToUser(false); 
+                setStock((prevStock) => prevStock + 1);
             } else {
                 alert(data.message || 'Failed to return the book.');
             }
         } catch (error) {
             console.error('Error returning book:', error);
-            
         }
     };
+
     const handleLoan = async () => {
         const userId = localStorage.getItem('userId'); 
+        if (stock <= 0) {
+            alert("This book is out of stock.");
+            return;
+        }
+
         try {
             const response = await fetch('/api/loan', {
                 method: 'POST',
@@ -72,6 +77,7 @@ function BookModal({ BookId, closeModal, currentUserId }) {
             const data = await response.json();
             if (data.success) {
                 setLoanedToUser(true);
+                setStock((prevStock) => prevStock - 1);
             } else {
                 alert(data.message || 'Failed to loan the book.');
             }
@@ -79,7 +85,6 @@ function BookModal({ BookId, closeModal, currentUserId }) {
             console.error('Error loaning book:', error);
         }
     };
-
 
     return (
         <div className="modal">
@@ -96,11 +101,14 @@ function BookModal({ BookId, closeModal, currentUserId }) {
                         <div id="divider"></div>
                         <p id="title2"> Summary </p>
                         <p id="summary">{book.summary}</p>
+                        <p id="stock">Stock: {stock}</p>
 
                         {loanedToUser ? (
                             <button className="ReturnButton" onClick={() => handleReturn(book.id)}>Return Book</button>
                         ) : (
-                            <button className="LoanButton" onClick={() => handleLoan(book.id)}>Loan for 1 Month</button>
+                            <button className="LoanButton" onClick={() => handleLoan(book.id)} disabled={stock <= 0}>
+                                {stock <= 0 ? 'Out of Stock' : 'Loan for 1 Month'}
+                            </button>
                         )}
                     </div>
                     <button id="Close" onClick={closeModal}>Close</button>
