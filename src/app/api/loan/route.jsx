@@ -16,7 +16,7 @@ export async function GET(req) {
   try {
     const loans = await prisma.loan.findMany({
       where: { bookId },
-      select: { userId: true },
+      select: { userId: true, return: true },
     });
 
     const book = await prisma.book.findUnique({
