@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BookModal from './BookModal';
 
-function BookView({ selectedGenre, inStockOnly, userId }) {
+function BookView({ selectedGenre, inStockOnly }) {
     const [books, setBooks] = useState([]);
     const [selectedBookId, setSelectedBookId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +13,7 @@ function BookView({ selectedGenre, inStockOnly, userId }) {
             .then(response => response.json())
             .then(data => setBooks(data))
             .catch(error => console.error('Error fetching books:', error));
-    }, [selectedGenre, inStockOnly, userId]);
+    }, [selectedGenre, inStockOnly]);
 
     const handleBookClick = (id) => {
         setSelectedBookId(id);
