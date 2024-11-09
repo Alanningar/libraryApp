@@ -24,7 +24,7 @@ function MyLoans() {
                 const books = await booksResponse.json();
 
                 const loanedBooksPromises = books.map(async (book) => {
-                    const loanResponse = await fetch(`/api/loan?bookId=${book.id}`);
+                    const loanResponse = await fetch(`/api/loan?bookId=${book.id}&userId=${userId}`);
                     if (!loanResponse.ok) {
                         throw new Error(`Failed to fetch loan status for book ID: ${book.id}`);
                     }
