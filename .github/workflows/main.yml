@@ -53,6 +53,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: nextjs-build
+          path: nextjs-build
 
       - name: List files after downloading artifacts
         run: ls -la nextjs-build
