@@ -52,13 +52,12 @@ function BookModal({ BookId, closeModal, currentUserId }) {
             const data = await response.json();
             if (data.success) {
                 setLoanedToUser(false); 
-                alert('Book returned successfully!');
             } else {
                 alert(data.message || 'Failed to return the book.');
             }
         } catch (error) {
             console.error('Error returning book:', error);
-            alert('An error occurred while trying to return the book.');
+            
         }
     };
     const handleLoan = async () => {
@@ -73,13 +72,11 @@ function BookModal({ BookId, closeModal, currentUserId }) {
             const data = await response.json();
             if (data.success) {
                 setLoanedToUser(true);
-                alert('Book loaned successfully!');
             } else {
                 alert(data.message || 'Failed to loan the book.');
             }
         } catch (error) {
             console.error('Error loaning book:', error);
-            alert('An error occurred while trying to loan the book.');
         }
     };
 
