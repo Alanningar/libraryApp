@@ -31,8 +31,7 @@ jobs:
         run: npm test
 
       - name: Build with Next.js
-        run: npm run build -- --verbose
-
+        run: npm run build
 
       - name: List files for debugging
         run: ls -R .next
