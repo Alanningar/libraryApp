@@ -1,10 +1,11 @@
-"use client";
-
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import BookModal from './BookModal';
 
 function BookView({ selectedGenre, inStockOnly, userId }) {
     const [books, setBooks] = useState([]);
     const [loanedBooks, setLoanedBooks] = useState(new Set());
+    const [selectedBookId, setSelectedBookId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const genre = selectedGenre === 'none' ? '' : selectedGenre.charAt(0).toUpperCase() + selectedGenre.slice(1);
@@ -70,10 +71,20 @@ function BookView({ selectedGenre, inStockOnly, userId }) {
         }
     };
 
+    const handleBookClick = (id) => {
+        setSelectedBookId(id);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedBookId(null);
+    };
+
     return (
         <div className="Books">
-            {books.map(({ id, cover, title, author, released, subgenre }) => (
-                <div className="Book" key={id}>
+            {books.map(({ cover, title, author, released, subgenre, id }, i) => (
+                <div className="Book" key={i} onClick={() => handleBookClick(id)}>
                     <img className="BookCover" src={cover} alt="bookCover" />
                     <div className="BookInfo">
                         <h1>{title}</h1>
@@ -87,6 +98,7 @@ function BookView({ selectedGenre, inStockOnly, userId }) {
                     </div>
                 </div>
             ))}
+            {isModalOpen && <BookModal BookId={selectedBookId} closeModal={closeModal} />}
         </div>
     );
 }

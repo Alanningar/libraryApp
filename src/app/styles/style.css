@@ -88,25 +88,94 @@ body {
     font-size: large;
     user-select: none;
 }
-.LoanButton, .ReturnButton {
-    background-color: #0070f3; /* Primary color */
-    color: white;
-    font-size: medium;
+
+.modal {
+    display: flex; 
+    position: fixed; 
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.book-details {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 70em;
+    margin: auto;
+    padding: 1em;
+}
+
+.book-info {
+    justify-content: space-around;
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+}
+
+#title-author {
+    align-self: flex-start;
+}
+
+#title {
+    font-size: 2em;
     font-weight: bold;
+    color: #333;
+}
+
+#title2 {
+    padding-top: 2vh;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+#author {
+    font-size: 1em;
+    font-weight: lighter;
+}
+
+#summary {
+    font-size: 1em;
+    font-weight: lighter;
+    height: 80%;
+    width: 100%;
+    overflow: auto;
+}
+
+#Close {
+    align-self: flex-start;
+    justify-self: flex-end;
+}
+
+#divider {
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    margin: 1em 0;
+}
+
+#loan {
+    background-color: rgb(0, 0, 255);
+    color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
+    font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 2em;
 }
 
-.LoanButton:hover, .ReturnButton:hover {
-    background-color: #005bb5; /* Darker shade on hover */
-    box-shadow: 0 4px 10px rgba(0, 112, 243, 0.3); /* Subtle shadow effect */
+#loan:hover {
+    background-color: darkblue;
 }
-
-.LoanButton:focus, .ReturnButton:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.4); /* Focus outline */
-}
-
