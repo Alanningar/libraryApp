@@ -24,7 +24,7 @@ function BookModal({ BookId, closeModal, currentUserId }) {
         async function fetchLoanStatus() {
             const userId = localStorage.getItem('userId'); 
             try {
-                const response = await fetch(`/api/loan?bookId=${BookId}&userId=${userId}`);
+                const response = await fetch(`${window.location.origin}/api/loan?bookId=${BookId}&userId=${userId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch loan status');
                 }
@@ -45,7 +45,7 @@ function BookModal({ BookId, closeModal, currentUserId }) {
     const handleReturn = async (bookId) => {
         const userId = localStorage.getItem('userId');
         try {
-            const response = await fetch(`/api/loan?userId=${userId}&bookId=${bookId}`, {
+            const response = await fetch(`${window.location.origin}/api/loan?userId=${userId}&bookId=${bookId}`, {
                 method: 'DELETE',
             });
     
@@ -69,7 +69,7 @@ function BookModal({ BookId, closeModal, currentUserId }) {
         }
 
         try {
-            const response = await fetch('/api/loan', {
+            const response = await fetch('${window.location.origin}/api/loan', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, bookId: BookId }),

@@ -12,7 +12,7 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
   
-    const res = await fetch('/api/login', {
+    const res = await fetch('${window.location.origin}/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),

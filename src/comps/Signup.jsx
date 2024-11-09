@@ -13,7 +13,7 @@ function Signup() {
         element.preventDefault();
 
         try {
-            const response = await fetch('/api/signup', {
+            const response = await fetch('${window.location.origin}/api/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -8,7 +8,7 @@ function BookView({ selectedGenre, inStockOnly }) {
 
     useEffect(() => {
         const genre = selectedGenre === 'none' ? '' : selectedGenre.charAt(0).toUpperCase() + selectedGenre.slice(1);
-        const query = `/api/book?genre=${genre}&inStockOnly=${inStockOnly}`;
+        const query = `${window.location.origin}/api/book?genre=${genre}&inStockOnly=${inStockOnly}`;
         fetch(query)
             .then(response => response.json())
             .then(data => setBooks(data))
