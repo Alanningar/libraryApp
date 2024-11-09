@@ -179,3 +179,26 @@ body {
 #loan:hover {
     background-color: darkblue;
 }
+
+.LoanButton, .ReturnButton {
+    background-color: #0070f3; 
+    color: white;
+    font-size: medium;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.LoanButton:hover, .ReturnButton:hover {
+    background-color: #005bb5;
+    box-shadow: 0 4px 10px rgba(0, 112, 243, 0.3); 
+}
+
+.LoanButton:focus, .ReturnButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.4); 
+}
+
